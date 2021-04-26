@@ -9,15 +9,15 @@ const options = {
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET
-  ***REMOVED***),
+    }),
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-  ***REMOVED***),
+    }),
     Providers.Facebook({
       clientId: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET
-  ***REMOVED***),
+    }),
     // ...add more providers here
   ],
 
@@ -35,13 +35,13 @@ const options = {
    synchronize: true,
    // ssl: true,
    authSource: 'admin'
-***REMOVED***,
+  },
 
  callbacks: {
     async signIn (user, account, profile) {
-      await Users.findByIdAndUpdate(user.id, {image: user?.image***REMOVED***)
+      await Users.findByIdAndUpdate(user.id, {image: user?.image})
 
-  ***REMOVED***,
+    },
     async session(session, user) {
       user = await Users.findById(user.id)
       const sessionUser = {
@@ -53,23 +53,23 @@ const options = {
         name: user.name,
         handle: user.handle,
         following: user?.following,
-    ***REMOVED***;
+      };
 
       return Promise.resolve({
         ...session,
         user: sessionUser,
-    ***REMOVED***);
-  ***REMOVED***,
-***REMOVED***,
+      });
+    },
+  },
   events: {
    createUser: async (message) => {
      const user = await Users.findById(message.id)
-     const handle = `${(user.name).split(' ').join('')***REMOVED***The${await randomAdj()***REMOVED***`
+     const handle = `${(user.name).split(' ').join('')}The${await randomAdj()}`
      user.handle = handle
      await user.save()
- ***REMOVED***,
-***REMOVED***
-***REMOVED***;
+   },
+  }
+};
 
 
 export default (req, res) => NextAuth(req, res, options)

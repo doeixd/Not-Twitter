@@ -1,36 +1,36 @@
 import mongoose from 'mongoose';
-import { ObjectId ***REMOVED*** from 'mongodb'
+import { ObjectId } from 'mongodb'
 import Post from'./Posts'
 
-mongoose.connect(process.env.DATABASE_URL, {useFindAndModify: false***REMOVED***);
+mongoose.connect(process.env.DATABASE_URL, {useFindAndModify: false});
 
 const userSchema = new mongoose.Schema({
   handle: String,
   name: String,
-  role: {type: String, default: 'user'***REMOVED***,
+  role: {type: String, default: 'user'},
   email: String,
   password: String,
   createdAt: Date,
   updatedAt: Date,
-  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'***REMOVED***],
-  followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***],
-  followerCount: {type: Number, default:0***REMOVED***,
-  following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***],
-  followingCount:{type: Number, default:0***REMOVED***,
+  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  followerCount: {type: Number, default:0},
+  following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  followingCount:{type: Number, default:0},
   image: String,
   about: String,
-  likes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'***REMOVED***],
-  notifications: [{action:String, actorID: {type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***, objectID: {type:mongoose.Schema.Types.ObjectId***REMOVED******REMOVED***],
-  lists: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***],
-  isPrivate: {type: Boolean, default: false***REMOVED***,
-  feed: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'***REMOVED***],
-  feedLastUpdated: {type: Date, default: Date.now***REMOVED***,
-***REMOVED***)
+  likes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  notifications: [{action:String, actorID: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}, objectID: {type:mongoose.Schema.Types.ObjectId}  }],
+  lists: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  isPrivate: {type: Boolean, default: false},
+  feed: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  feedLastUpdated: {type: Date, default: Date.now},
+})
 
-// [{action:String, actorID, {type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED*** objectID: {type:mongoose.Schema.Types.ObjectId***REMOVED***,***REMOVED***]
+// [{action:String, actorID, {type: mongoose.Schema.Types.ObjectId, ref: 'User'} objectID: {type:mongoose.Schema.Types.ObjectId},  }]
 
 
-userSchema.index({name: 'text', handle: 'text', about: 'text'***REMOVED***);
+userSchema.index({name: 'text', handle: 'text', about: 'text'});
 /* type Role = 'user' | 'admin' */
 
 /* export interface Users { */
@@ -46,7 +46,7 @@ userSchema.index({name: 'text', handle: 'text', about: 'text'***REMOVED***);
 /*   likes: number[] */
 /*   notifications: string[], */
 /*   lists: number[] */
-/* ***REMOVED*** */
+/* } */
 
 export default mongoose.models.User || mongoose.model('User', userSchema)
 

@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 const links = [
-  { href: 'https://github.com/vercel/next.js', label: 'GitHub' ***REMOVED***,
-  { href: 'https://nextjs.org/docs', label: 'Docs' ***REMOVED***,
+  { href: 'https://github.com/vercel/next.js', label: 'GitHub' },
+  { href: 'https://nextjs.org/docs', label: 'Docs' },
 ]
 
 export default function Nav() {
@@ -17,15 +17,15 @@ export default function Nav() {
           </Link>
         </li>
         <ul className="flex items-center justify-between space-x-4">
-          {links.map(({ href, label ***REMOVED***) => (
-            <li key={`${href***REMOVED***${label***REMOVED***`***REMOVED***>
-              <a href={href***REMOVED*** className="no-underline btn-blue">
-                {label***REMOVED***
+          {links.map(({ href, label }) => (
+            <li key={`${href}${label}`}>
+              <a href={href} className="no-underline btn-blue">
+                {label}
               </a>
             </li>
-          ))***REMOVED***
+          ))}
         </ul>
       </ul>
     </nav>
   )
-***REMOVED***
+}

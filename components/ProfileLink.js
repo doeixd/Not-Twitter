@@ -1,29 +1,29 @@
 import Link from 'next/link'
-import { useStore ***REMOVED*** from "../lib/store"
-import { useEffect ***REMOVED*** from 'react'
+import { useStore } from "../lib/store"
+import { useEffect } from 'react'
 import useWindowSize from '../lib/useWindowSize'
 
-export default function ProfileLink ({id, children, showPreview = true***REMOVED***) {
+export default function ProfileLink ({id, children, showPreview = true}) {
   const set = useStore(state => state.set)
-  const {width: screenWidth***REMOVED*** = useWindowSize()
+  const {width: screenWidth} = useWindowSize()
 
   if (screenWidth <= 812) showPreview = false
   const showProfilePreview = showPreview ? useProfilePreview(id, set) : undefined
   
   useEffect(() =>{
     return () => {
-      set(state => {state.preview = null***REMOVED***)
-  ***REMOVED*** 
-***REMOVED***,[])
+      set(state => {state.preview = null})
+    } 
+  },[])
 
   return (
-    <Link href={`/${id***REMOVED***`***REMOVED***><span onClick={e =>{ e.stopPropagation(); set(state => {state.lastPage = window.location***REMOVED***)***REMOVED******REMOVED*** class='contents cursor-pointer' onMouseOver={showProfilePreview***REMOVED***>{children***REMOVED***</span></Link>  
+    <Link href={`/${id}`}><span onClick={e =>{ e.stopPropagation(); set(state => {state.lastPage = window.location})}} class='contents cursor-pointer' onMouseOver={showProfilePreview}>{children}</span></Link>  
   )
-***REMOVED***
+}
 
 
 var useProfilePreview = (id, set) => (e) => {
-  set(state => {state.preview = id***REMOVED***)
+  set(state => {state.preview = id})
 
   const preview = document.querySelector('#profile-preview')
   if (!preview) return
@@ -34,15 +34,15 @@ var useProfilePreview = (id, set) => (e) => {
 
   const linkPosInViewport = e.target.getBoundingClientRect()
   const isDisplayedBelow = window.innerHeight - linkPosInViewport.bottom > preview.offsetHeight
-  const linkPosInWindow = {top: linkPosInViewport.top + window.pageYOffset, right: linkPosInViewport.right + window.pageXOffset, bottom: linkPosInViewport.bottom + window.pageYOffset, left: linkPosInViewport.left + window.pageXOffset***REMOVED***
+  const linkPosInWindow = {top: linkPosInViewport.top + window.pageYOffset, right: linkPosInViewport.right + window.pageXOffset, bottom: linkPosInViewport.bottom + window.pageYOffset, left: linkPosInViewport.left + window.pageXOffset}
   const previewCenter = Math.floor((preview.offsetWidth/2) - (e.target.offsetWidth/2) ) 
 
   showPreviewTimeout = setTimeout(() => {
     preview.style.zIndex = 10
     preview.style.opacity = 1
-    preview.style.left = `${linkPosInWindow.left - previewCenter***REMOVED***px` 
-    preview.style.top = isDisplayedBelow ? `${linkPosInWindow.bottom + 10***REMOVED***px` : `${linkPosInWindow.top - preview.offsetHeight - 10***REMOVED***px`
-***REMOVED***, 750);
+    preview.style.left = `${linkPosInWindow.left - previewCenter}px` 
+    preview.style.top = isDisplayedBelow ? `${linkPosInWindow.bottom + 10}px` : `${linkPosInWindow.top - preview.offsetHeight - 10}px`
+  }, 750);
 
     e.target.addEventListener('mouseleave', e => {
         clearTimeout(showPreviewTimeout)
@@ -51,19 +51,19 @@ var useProfilePreview = (id, set) => (e) => {
           preview.style.zIndex = -1
           setTimeout(() => {
             preview.style.top = '-700px'
-        ***REMOVED***, 30);
-      ***REMOVED***, 250) 
-  ***REMOVED***)
+          }, 30);
+        }, 250) 
+    })
 
     preview.addEventListener('mouseover', e => {
       clearTimeout(hidePreviewTimeout)
-  ***REMOVED***)
+    })
 
     preview.addEventListener('mouseleave', () => {
         preview.style.opacity = 0
         preview.style.zIndex = -1
         setTimeout(() => {
           preview.style.top = '-700px'
-      ***REMOVED***, 30);
-  ***REMOVED***)  
-***REMOVED***
+        }, 30);
+    })  
+}

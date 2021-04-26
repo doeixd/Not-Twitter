@@ -1,26 +1,26 @@
 
 import User from '../../../data/Users'
-import { ObjectId ***REMOVED*** from 'mongodb'
-import { getSession ***REMOVED*** from 'next-auth/client'
-import { notify ***REMOVED*** from '../../../lib/notify'
+import { ObjectId } from 'mongodb'
+import { getSession } from 'next-auth/client'
+import { notify } from '../../../lib/notify'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(400).end()
 
   try {
-    let { user: { id: currentUserID ***REMOVED*** ***REMOVED*** = await getSession({ req ***REMOVED***) 
+    let { user: { id: currentUserID } } = await getSession({ req }) 
       
-    let { query: { userID: requestedUserID, fields, handle ***REMOVED******REMOVED*** = req
+    let { query: { userID: requestedUserID, fields, handle }} = req
 
     
-    const follower = await User.findByIdAndUpdate(new ObjectId(currentUserID), {$push: {following: requestedUserID***REMOVED***, $inc:{followingCount: 1***REMOVED******REMOVED***)
-    const followee = await User.findByIdAndUpdate(new ObjectId(requestedUserID), {$push: {followers: currentUserID***REMOVED***, $inc:{followerCount: 1***REMOVED******REMOVED***)
+    const follower = await User.findByIdAndUpdate(new ObjectId(currentUserID), {$push: {following: requestedUserID}, $inc:{followingCount: 1}})
+    const followee = await User.findByIdAndUpdate(new ObjectId(requestedUserID), {$push: {followers: currentUserID}, $inc:{followerCount: 1}})
 
-    await notify({action: 'follow', actorID: currentUserID, objectID: requestedUserID***REMOVED***)
+    await notify({action: 'follow', actorID: currentUserID, objectID: requestedUserID})
 
     return res.status(200).end()
-***REMOVED*** catch (error) {
+  } catch (error) {
     return res.status(400).end()
-***REMOVED***
+  }
 
-***REMOVED***
+}

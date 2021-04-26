@@ -1,25 +1,25 @@
 import mongoose from 'mongoose';
 
-// mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true***REMOVED***);
-mongoose.connect(process.env.DATABASE_URL, {useFindAndModify: false***REMOVED***);
+// mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.DATABASE_URL, {useFindAndModify: false});
 
 const postSchema = new mongoose.Schema({
-  createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***,
+  createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   content: String,
-  likes: {type: Number, default: 0***REMOVED***,
-  replies: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'***REMOVED***],
-  replyCount: {type: Number, default: 0***REMOVED***,
-  quotes: {type: mongoose.Schema.Types.ObjectId, ref:'Post'***REMOVED***,
-  quoteCount: {type: Number, default: 0***REMOVED***,
-  replyTo: {type: mongoose.Schema.Types.ObjectId, ref:'Post'***REMOVED***,
+  likes: {type: Number, default: 0},
+  replies: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  replyCount: {type: Number, default: 0},
+  quotes: {type: mongoose.Schema.Types.ObjectId, ref:'Post'},
+  quoteCount: {type: Number, default: 0},
+  replyTo: {type: mongoose.Schema.Types.ObjectId, ref:'Post'},
   replyToHandle: String,
-  createdAt: {type: Date, default: () => new Date()***REMOVED***,
+  createdAt: {type: Date, default: () => new Date()},
   tags: [String],
-  mentions: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'***REMOVED***]
+  mentions: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 
-***REMOVED***)
+})
 
-postSchema.index({content: 'text', createdBy: 'text', tags: 'text'***REMOVED***);
+postSchema.index({content: 'text', createdBy: 'text', tags: 'text'});
 
 
 export default mongoose.models.Post || mongoose.model('Post', postSchema)

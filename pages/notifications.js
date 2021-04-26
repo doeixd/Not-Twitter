@@ -1,10 +1,10 @@
-import { getNotifications, getUser ***REMOVED*** from "../lib/queryHooks";
+import { getNotifications, getUser } from "../lib/queryHooks";
 import Icon from '../components/icons'
 import ProfileLink from '../components/ProfileLink'
 import CustomLink from "../components/Link";
 
 export default function notifications () {
-  const {data: notifications, isLoading, error***REMOVED*** = getNotifications()
+  const {data: notifications, isLoading, error} = getNotifications()
 
   if (isLoading) return (<p>Loading...</p>)
   return ( <>
@@ -13,62 +13,62 @@ export default function notifications () {
     </h1>
     {
       notifications.map(n => {
-        return <Notification {...n***REMOVED*** />
-    ***REMOVED***)
-  ***REMOVED***
+        return <Notification {...n} />
+      })
+    }
   </>)
-***REMOVED***
+}
 
 
-function Notification({action, actorID, objectID***REMOVED***) {
-  const {data: userData, isLoading, error***REMOVED*** = getUser(actorID)
+function Notification({action, actorID, objectID}) {
+  const {data: userData, isLoading, error} = getUser(actorID)
   if (isLoading) return <p>Loading...</p>
-  const href = ['mention', 'follow'].includes(action) ? `/${actorID***REMOVED***` : `/posts/${objectID***REMOVED***`
+  const href = ['mention', 'follow'].includes(action) ? `/${actorID}` : `/posts/${objectID}`
   return (
-    <CustomLink href={href***REMOVED*** class='no-underline hover:bg-gray-100 block'>
+    <CustomLink href={href} class='no-underline hover:bg-gray-100 block'>
       <div class='flex gap-7 p-5 items-center '>
         <div class=' pl-3'>
-          <ActionIcon action={action***REMOVED*** />
+          <ActionIcon action={action} />
         </div>
         <div class=' pl-0.5'>
-          <img src={userData.image***REMOVED*** class='w-10 object-cover rounded-full inline mr-3.5' />
-          <ActionText action={action***REMOVED*** userData={userData***REMOVED*** />
+          <img src={userData.image} class='w-10 object-cover rounded-full inline mr-3.5' />
+          <ActionText action={action} userData={userData} />
         </div>
       </div>
     </CustomLink>
   )
-***REMOVED***
+}
 
 
-function ActionIcon({ action ***REMOVED***) {
+function ActionIcon({ action }) {
   const match = {
-    follow: <Icon name='personFilled' options={{color: 'blue-400', width: '8'***REMOVED******REMOVED*** />,
-    like: <Icon name='heartFilled' options={{color:'red-500', width:'8'***REMOVED******REMOVED***/>,
-    reply: <Icon name='commentFilled' options={{color:'indigo-500', width: '8'***REMOVED******REMOVED*** />,
-    quote: <Icon name='repostFilled' options={{color:'green-400', width: '8'***REMOVED******REMOVED*** />,
-    mention: <Icon name='at' options={{color:'pink-500', width: '8'***REMOVED******REMOVED*** />,
-***REMOVED***
+    follow: <Icon name='personFilled' options={{color: 'blue-400', width: '8'}} />,
+    like: <Icon name='heartFilled' options={{color:'red-500', width:'8'}}/>,
+    reply: <Icon name='commentFilled' options={{color:'indigo-500', width: '8'}} />,
+    quote: <Icon name='repostFilled' options={{color:'green-400', width: '8'}} />,
+    mention: <Icon name='at' options={{color:'pink-500', width: '8'}} />,
+  }
 
   return match[action]
-***REMOVED***
+}
 
 
-function ActionText({action, userData:{name, _id***REMOVED******REMOVED***) {
+function ActionText({action, userData:{name, _id}}) {
   const match = {
     follow: `followed you`,
     like: `liked your post`,
     reply: 'replied to your post',
     quote: 'quoted you',
     mention: 'mentioned you',
-***REMOVED***
+  }
   return ( 
     <span>
-        <ProfileLink id={_id***REMOVED***>
+        <ProfileLink id={_id}>
           <span class='font-bold hover:underline'>
-            {name***REMOVED***
+            {name}
           </span>
         </ProfileLink>
-        {` ${match[action]***REMOVED***`***REMOVED***
+        {` ${match[action]}`}
     </span>
   )
-***REMOVED***
+}
