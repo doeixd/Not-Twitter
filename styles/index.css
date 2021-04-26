@@ -6,10 +6,12 @@
 @tailwind components;
 /* Stop purging. */
 
-html,
+
 body {
-  @apply bg-gray-50 dark:bg-gray-900;
+  line-height: 1.25;
+  @apply dark:bg-gray-900 font-sans text-gray-800 bg-white;
 ***REMOVED***
+
 
 /* Write your own custom component styles here */
 .btn-blue {
@@ -19,5 +21,96 @@ body {
 /* Start purging... */
 @tailwind utilities;
 /* Stop purging. */
+* { 
+  min-width: 0; 
+  min-height: 0;
+***REMOVED***
 
+.transition * {
+  transition: all 0.13s ease-in-out;
+***REMOVED***
+
+img {
+  object-fit: cover;
+  flex-shrink: 0;
+***REMOVED***
 /* Your own custom utilities */
+/* @media (max-width: 813px) { */ 
+body { 
+  font-size: 17.25px;
+***REMOVED***
+/* ***REMOVED*** */
+
+@media (max-width: 813px) { 
+  body { 
+    font-size: 15px;
+***REMOVED***
+***REMOVED***
+
+
+#container {
+  /* width: 1410px; */
+  /* margin: 0 auto; */
+  display: inline-flex;
+  min-width: 100%;
+***REMOVED***
+
+@media (max-width: 1410px) {
+  #container {
+    max-width: 1100px;
+
+***REMOVED***
+
+***REMOVED***
+
+
+.bg-yellow-500-dark {
+  background-color: #f9c771;
+  cursor: default;
+***REMOVED***
+
+.bg-yellow-500-light {
+  background-color: #F59E0B;
+***REMOVED***
+
+.bg-yellow-500-light:hover {
+  background-color: #e5860b;
+  cursor:pointer;
+***REMOVED***
+
+.grow-wrap {
+  /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+  display: grid;
+***REMOVED***
+.grow-wrap::after {
+  /* Note the weird space! Needed to preventy jumpy behavior */
+  content: attr(data-replicated-value) " ";
+
+  /* This is how textarea text behaves */
+  white-space: pre-wrap;
+
+  /* Hidden from view, clicks, and screen readers */
+  visibility: hidden;
+***REMOVED***
+.grow-wrap > textarea {
+  /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+  resize: none;
+
+  /* Firefox shows scrollbar on growth, you can hide like this. */
+  overflow: hidden;
+***REMOVED***
+.grow-wrap > textarea,
+.grow-wrap::after {
+  /* Identical styling required!! */
+  font: 1.3rem;
+  padding: .77em 1em 1em 1em;
+  /* Place on top of each other */
+  grid-area: 1 / 1 / 2 / 2;
+  outline: none;
+  border: 0;
+***REMOVED***
+
+
+label {
+  display: block;
+***REMOVED***
