@@ -32,7 +32,6 @@ export default function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (!loading && session?.user) set(state => session?.user)
-    set(state => {state.lastPage = '/'})
   },[loading, session])
 
   return <>

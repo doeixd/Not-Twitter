@@ -7,7 +7,16 @@ module.exports = {
       "./pages/**/*.{js,ts,jsx,tsx}",
     ],
     options: {
-      safelist: ["red-500", "hover:red-500", "hover:green-500", "hover:gray-150", "w-9"],
+      safelist: [
+        "text-red-500", "hover:text-red-500",
+        "w-4/5" ,"sm:w-full" ,"pt-4" ,"pb-4",
+        "p-2", "h-min", "w-min", "sm:p-1", "mr-1.5",
+        "transition-all", "group-hover:bg-yellow-100", 
+        "bg-red-500", "hover:bg-red-500", "hover:green-500", 
+        "hover:gray-150", "w-9", "h-min", "justify-between" ,
+        "justify-between", "w-4/5", "sm:w-full", "pt-4", "pb-4",
+       "group-hover:bg-green-100", "group-hover:bg-red-100", "rounded-full",
+      ],
     },
   },
   darkMode: "media", // 'media' or 'class'
@@ -74,6 +83,8 @@ module.exports = {
     extend: {
       borderRadius: ['last'],
       padding: ['last'],
+      filter: ['hover'],
+      saturate: ['hover'],
     },
   },
   plugins: [require("tailwindcss-blend-mode")],

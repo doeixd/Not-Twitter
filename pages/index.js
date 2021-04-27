@@ -18,6 +18,9 @@ export default function IndexPage(props) {
   // if (isLoading) return 'Loading'
   const {width: screenWidth} = useWindowSize()
   const image = useStore(state => state.image)
+  const { set } = useStore()
+  
+  set(state => {state.lastPage = '/'})
 
   if (screenWidth < 812) {
     return (

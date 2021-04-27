@@ -27,11 +27,7 @@ const Content = ({main, data, isInFeed, curID}) => <>
 </>
 
 
-export default function Post ({id: postID, isInFeed = true, main=false, mini=false}) {
-  const set = useStore(state => state.set)
-  const like = useLikePost(postID)
-  // const repost = useRepost(postID)
-  const deletePost = useDeletePost(postID)
+export default function Post ({id: postID, isInFeed = true, main: isMainPost=false, mini: isQuotedPost=false}) {
   const router = useRouter()
   const {width: screenWidth} = useWindowSize()
   const curID = useStore(state => state.id)
@@ -43,128 +39,22 @@ export default function Post ({id: postID, isInFeed = true, main=false, mini=fal
 
   if (isPostLoading || isUserLoading) return <> </>
 
-  const data = Object.assign({...userData, userLikes: userData.likes} ?? {}, postData ?? {})
+  let data = Object.assign({...userData, userLikes: userData.likes} ?? {}, postData ?? {})
   /* data.content = data.content.replace(/(#)\w+/g, '<Link href="/tags/$&"><a class="z-10 text-yellow-500">$`$&</a></Link>') */
 
 
-  const comment = (e) => {
-    e.stopPropagation()
-    set(state => {state.replyTo = postID })
-    set(state => {state.quotes = null })
-  }
 
-  const repost = (e) => {
-    e.stopPropagation()
-    set(state => {state.quotes = postID })
-    set(state => {state.replyTo = null })
-  }
 
-  const likeIt = (e) => {
-    e.stopPropagation()
-    like.mutate(postID)
+  if (isMainPost) return <MainPost />
+  // if (isQuotedPost) return <QuotedPost />
+  // if (isReply) return <ReplyPost />
 
-  }
 
-  const showDelete = e => {
-    e.stopPropagation()
-    const deleteEl = document.querySelector(`#delete${postID}`)
-    if (deleteEl) {
-      deleteEl.style.display = 'block'
-      deleteEl.style.opacity = 1
-      document.addEventListener('click',d => {
-        d.target
-      })
-      deleteEl.addEventListener('mouseleave', () => {
-        deleteEl.style.display = 'none'
-        deleteEl.style.opacity = 0
-      })
-      deleteEl.addEventListener('click', () => {
-        // e.stopPropagation()
-        deletePost.mutate(postID)
-      })
-    }
-  }
 
-  if (main) return (
-        <div class="px-4 pt-4 post-container">
-          {data?.replyTo && ( <div class='relative -top-2 text-gray-400 pb-1 pl-1'> {" "} Replying To <span class="text-yellow-500">@{data?.replyToHandle}</span> </div>)}
-          <div class="inline-flex flex-row gap-2">
-            <ProfileLink id={data?.createdBy} handle={data?.handle ?? "patrickg"} showPreview={isInFeed}>
-              <img class="preview-profile h-14 w-14 sm:w-11 sm:h-11 top-3 rounded-full inline" src={ data?.image ?? "https://www.thispersondoesnotexist.com/image" } />
-            </ProfileLink>
-            <div class="pt-2 sm:pt-0">
-              <ProfileLink id={data?.createdBy} showPreview={isInFeed} handle={data?.handle ?? "patrickg"}>
-                <span class="font-bold pr-2 hover:underline">{data?.name || "REDACTED"}</span>
-              </ProfileLink>
-              <ProfileLink id={data?.createdBy} showPreview={isInFeed} handle={data?.handle ?? "patrickg"}>
-                <div class="text-gray-500 pr-3 hover:underline">
-                  {`@${(data?.handle ?? data?.name?.split(" ").join("") ?? "REDACTED")}`}
-                </div>
-              </ProfileLink>
-            </div>
-          </div>
-    {(data?.createdBy == curID && isInFeed) && (<span onClick={(e) => e.stopPropagation()} class='relative z-0 float-right'>
-      <span onClick={e => showDelete(e)} class="group hover:bg-yellow-100 rounded-full p-2"><Icon name='opts' /></span>
-      <div id={`delete${postID}`} class='w-max rounded-md transition-all opacity-0 hidden top-0 absolute left-0 sm:-left-16 bg-white shadow-md p-3 text-red-500 hover:bg-gray-50 cursor-pointer'>
-      <Icon name='trash' options={{color: 'red-500', hoverColor:'red-500'}} /><span> Delete</span>
-      </div>
-      </span>)}
-          <div class="w-full">
-            {<Content {...{data, main, isInFeed, curID}}/>}
-            {/* <div class={`max-w-96 break-all pt-4 pb-8 text-2xl`} dangerouslySetInnerHTML={{ __html: data?.content ??  " ", }}></div> */}
-            <div class="text-gray-500 py-4">
-              {
-                ((date = new Date(data?.createdAt)),
-                `${date
-                  .toLocaleTimeString()
-                  .replace(/:\d\d /, " ")} · ${date
-                  .toDateString()
-                  .replace(/\w+ /, "")}`)
-              }
-            </div>
-            <div class="py-3 border-t border-b border-gray-200 space-x-5 text-gray-500 pl-1">
-              <span>
-                <span class="font-bold text-gray-700">
-                  {data?.replyCount ?? 0}
-                </span> Replies
-              </span>
-              <span>
-                <span class="font-bold text-gray-700">{data?.quoteCount ?? 0}</span> Quotes
-              </span>
-              <span>
-                <span class="font-bold text-gray-700">{data?.likes}</span> Likes
-              </span>
-            </div>
-            <div class="flex flex-row justify-around w-full py-3 sm:py-2">
-              <span onClick={(e) => comment(e)} class="text-gray-400 group hover:text-yellow-500">
-                <span class="transition-all block group-hover:bg-yellow-100 group-hover:content rounded-full p-2">
-                  <Icon name='comment' options={{width: '6', mdWidth: '5'}} />
-                </span>
-              </span>
-              <span class="space-x-5 text-gray-400 group hover:text-green-500">
-                <span onClick={e => repost(e)} class="transition-all block group-hover:bg-green-100 group-hover:content rounded-full p-2">
-                  <Icon name='repost' options={{width: '6', mdWidth: '5', hoverColor: 'green-500'}} />
-                </span>
-              </span>
-              <span onClick={(e) => likeIt(e)} class={`space-x-5 text-${ data?.isLiked ? "red" : "gray" }-500  block group hover:text-red-400`}>
-                <span class="transition-all  block group-hover:bg-red-100 group-hover:content rounded-full p-2">
-                  {data?.isLiked
-                    ? <Icon name={'heartFilled'} options={{ width: '6', minWidth: '5', color: "red-500", hoverColor: 'red-500'}} />
-                    : <Icon name={'heart'} options={{width: '6', minWidth: '5', hoverColor: 'red-500'}} />
-                  }
-                </span>
-              </span>
-              <span class="space-x-2 text-gray-500 group hover:text-yellow-500">
-                <span class="transition-all block group-hover:bg-yellow-100 group-hover:content rounded-full p-2">
-                  <Icon name='share' options={{width: '6', mdWidth: '5'}} />
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-      )
 
-  if (mini) return (<div class='mt-3 border border-gray-300 rounded-lg p-2'>
+
+
+  if (isQuotedPost) return (<div class='mt-3 border border-gray-300 rounded-lg p-2'>
   {data?.replyTo && ( <div> {" "} Replying To <span class="text-yellow-500">{data?.replyToHandle}</span> </div>)}
   <div class="flex flex-row gap-2">
     <ProfileLink id={data?.createdBy} showPreview={isInFeed} handle={data?.handle ?? "patrickg"}>
@@ -182,7 +72,7 @@ export default function Post ({id: postID, isInFeed = true, main=false, mini=fal
     </div>
   </div>
   <div class="w-full">
-    {<Content {...{data, main, isInFeed, curID}}/>}
+    {<Content {...{data, main: isMainPost, isInFeed, curID}}/>}
     {/* <div class={`max-w-96 break-all pt-1 pb-1`} dangerouslySetInnerHTML={{ __html: data?.content ??  " ", }}></div> */}
   </div>
   </div>)
@@ -193,14 +83,18 @@ export default function Post ({id: postID, isInFeed = true, main=false, mini=fal
     <div
       onClick={() => router.push(`/posts/${postID}`, undefined, {shallow: true})}
       id="post-container"
-      class="p-3 sm:p-2 hover:bg-gray-50 transition-colors cursor-pointer w-full">
+      class=" px-3 sm:p-2 hover:bg-gray-50 transition-colors cursor-pointer w-full">
       <div class="flex gap-5 sm:gap-2">
-        <ProfileLink id={data?.createdBy} handle={data?.handle ?? "patrickg"}>
-          <img class="preview-profile flex-shrink-0  h-14 w-14 sm:h-11 sm:w-11 rounded-full inline"
+        <div class='flex flex-col flex-shrink-0 items-center'>
+          <div class='absolute h-3 bg-gray-200 w-1'></div>
+          <ProfileLink id={data?.createdBy} handle={data?.handle ?? "patrickg"}>
+            <img class="mt-3 hover:filter hover:saturate-0 transition-all preview-profile flex-shrink-0  h-14 w-14 sm:h-11 sm:w-11 rounded-full inline"
             src={data?.image ?? "https://www.thispersondoesnotexist.com/image"}
-          />
-        </ProfileLink>
-        <div class="w-full">
+            />
+          </ProfileLink>
+          {/* <div class='h-full bg-gray-200 w-1'></div> */}
+        </div>
+        <div class="w-full pt-3">
         <span class=' max-w-85p flex-shrink inline-flex sm:space-between flex-row align-baseline sm:justify-between'>
      <div className='inline-flex flex-shrink flex-nowrap max-w-85p'>
           <ProfileLink
@@ -246,9 +140,9 @@ export default function Post ({id: postID, isInFeed = true, main=false, mini=fal
             {/* class={`max-w-96 break-all ${main && "text-lg"}`} */}
             {/* dangerouslySetInnerHTML={{ __html: data?.content ?? " " }}></div> */}
           {/* {data?.quotes && <Post id={data?.quotes} mini={true} />} */}
-          {<Content {...{data, main, isInFeed, curID}}/>}
+          {<Content {...{data, main: isMainPost, isInFeed, curID}}/>}
           {isInFeed ? (
-            <div class="text-gray-500 flex flex-row justify-between w-4/5 sm:w-full pt-4">
+            <div class="text-gray-500 flex flex-row justify-between w-4/5 sm:w-full pt-4 pb-4">
               <div class="group hover:text-yellow-500">
                 <span
                   onClick={e => comment(e)}
@@ -304,4 +198,176 @@ export default function Post ({id: postID, isInFeed = true, main=false, mini=fal
       </div>
     </div>
   )
+
+
+
+function MainPost () {
+  
+  return (
+  <div class="px-4 pt-4 post-container">
+    {data?.replyTo && ( <div class='relative -top-2 text-gray-400 pb-1 pl-1'> {" "} Replying To <span class="text-yellow-500">@{data?.replyToHandle}</span> </div>)}
+    <div class="inline-flex flex-row gap-2">
+      <ProfileLink id={data?.createdBy} handle={data?.handle ?? "patrickg"} showPreview={isInFeed}>
+        <img class="preview-profile h-14 w-14 sm:w-11 sm:h-11 top-3 rounded-full inline" src={ data?.image ?? "https://www.thispersondoesnotexist.com/image" } />
+      </ProfileLink>
+      <div class="pt-2 sm:pt-0">
+        <ProfileLink id={data?.createdBy} showPreview={isInFeed} handle={data?.handle ?? "patrickg"}>
+          <span class="font-bold pr-2 hover:underline">{data?.name || "REDACTED"}</span>
+        </ProfileLink>
+        <ProfileLink id={data?.createdBy} showPreview={isInFeed} handle={data?.handle ?? "patrickg"}>
+          <div class="text-gray-500 pr-3 hover:underline">
+            {`@${(data?.handle ?? data?.name?.split(" ").join("") ?? "REDACTED")}`}
+          </div>
+        </ProfileLink>
+      </div>
+    </div>
+{(data?.createdBy == curID && isInFeed) && (<span onClick={(e) => e.stopPropagation()} class='relative z-0 float-right'>
+<span onClick={e => showDelete(e)} class="group hover:bg-yellow-100 rounded-full p-2"><Icon name='opts' /></span>
+<div id={`delete${postID}`} class='w-max rounded-md transition-all opacity-0 hidden top-0 absolute left-0 sm:-left-16 bg-white shadow-md p-3 text-red-500 hover:bg-gray-50 cursor-pointer'>
+<Icon name='trash' options={{color: 'red-500', hoverColor:'red-500'}} /><span> Delete</span>
+</div>
+</span>)}
+    <div class="w-full">
+      {<Content {...{data, main: isMainPost, isInFeed, curID}}/>}
+      {/* <div class={`max-w-96 break-all pt-4 pb-8 text-2xl`} dangerouslySetInnerHTML={{ __html: data?.content ??  " ", }}></div> */}
+      <div class="text-gray-500 py-4">
+        {
+          ((date = new Date(data?.createdAt)),
+          `${date
+            .toLocaleTimeString()
+            .replace(/:\d\d /, " ")} · ${date
+            .toDateString()
+            .replace(/\w+ /, "")}`)
+        }
+      </div>
+      <div class="py-3 border-t border-b border-gray-200 space-x-5 text-gray-500 pl-1">
+        <span>
+          <span class="font-bold text-gray-700">
+            {data?.replyCount ?? 0}
+          </span> Replies
+        </span>
+        <span>
+          <span class="font-bold text-gray-700">{data?.quoteCount ?? 0}</span> Quotes
+        </span>
+        <span>
+          <span class="font-bold text-gray-700">{data?.likes}</span> Likes
+        </span>
+      </div>
+  
+      <ActionBar />
+    </div>
+  </div>
+  )
+}
+
+
+function ActionBar () {
+  const set = useStore(state => state.set)
+  const like = useLikePost(postID)
+  const deletePost = useDeletePost(postID)
+  // const repost = useRepost(postID)
+  
+  const comment = (e) => {
+    e.stopPropagation()
+    set(state => {state.replyTo = postID })
+    set(state => {state.quotes = null })
+  }
+
+  const repost = (e) => {
+    e.stopPropagation()
+    set(state => {state.quotes = postID })
+    set(state => {state.replyTo = null })
+  }
+
+  const likePost = (e) => {
+    e.stopPropagation()
+    like.mutate(postID)
+  }
+
+  const showDelete = e => {
+    e.stopPropagation()
+    const deleteEl = document.querySelector(`#delete${postID}`)
+    if (deleteEl) {
+      deleteEl.style.display = 'block'
+      deleteEl.style.opacity = 1
+      document.addEventListener('click',d => {
+        d.target
+      })
+      deleteEl.addEventListener('mouseleave', () => {
+        deleteEl.style.display = 'none'
+        deleteEl.style.opacity = 0
+      })
+      deleteEl.addEventListener('click', () => {
+        // e.stopPropagation()
+        deletePost.mutate(postID)
+      })
+    }
+  }
+
+  const mainPostOptions = isMainPost ? {width: '6', mdWidth: '5'} : {}
+
+  const containerStyles =
+    !isMainPost 
+      ?  "justify-between w-4/5 sm:w-full pt-4 pb-4"
+      :  "justify-around w-full py-3 sm:py-2"
+  
+  const iconGroupStyles = color =>
+    `transition-all group-hover:bg-${color}-100 rounded-full p-2 h-min w-min ${
+      !isMainPost && "sm:p-1 mr-1.5"
+    }`
+
+  data = Object.assign(
+    data,
+    isMainPost 
+      ? {replyCount: null, isReposted: '', quoteCount: '', likes: ''}
+      : {}
+  )
+
+  return (
+    <div class={`text-gray-500 flex flex-row ${containerStyles}`}>
+      <div class="group contents hover:text-yellow-500">
+        <span
+          onClick={e => comment(e)}
+          class={iconGroupStyles('yellow')}>
+          <Icon name='comment' options={{...mainPostOptions}} />
+        </span>
+        {/* {data?.replyCount} */}
+      </div>
+
+      <div class={` contents text-${data?.isReposted ? 'green' : 'gray'}-500 group hover:text-green-500`}>
+        <span
+          onClick={e => repost(e)}
+          class={iconGroupStyles('green')}>
+        {
+          data?.isReposted
+          ? <Icon name='repostFilled' options={{...mainPostOptions, color:'green-500', hoverColor: "green-500"}} />
+          : <Icon name='repost' options={{...mainPostOptions, hoverColor: "green-500"}} />
+        }
+        </span>
+        {data?.quoteCount ?? 0}
+      </div>
+
+      <div
+        onClick={e => likePost(e)}
+        class={`text-${
+          data?.isLiked ? "red" : "gray"
+        }-500 group hover:text-red-400 contents`}>
+        <span class={iconGroupStyles('red')}>
+          {data?.isLiked
+            ? <Icon name={'heartFilled'} options={{...mainPostOptions, color: "red-500", hoverColor: 'red-500', color: 'red-500'}} />
+            : <Icon name={'heart'} options={{...mainPostOptions, color:'red', hoverColor: 'red-500'}} />
+          }
+        </span>
+        {data?.likes ?? 0}
+      </div>
+
+      <div class="group hover:text-yellow-500 contents">
+        <span class={iconGroupStyles('yellow')}>
+          <Icon name='share' />
+        </span>
+      </div>
+    </div>
+  )
+}
+
 }

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const currentUser = await extractCurrentUser(req)
     const post = await createPost(req?.body, currentUser)
     await dispatchNotifications(post)
-    return res.status(200).end()
+    return res.json(post)
   }
 
   catch(err) {
